@@ -2,30 +2,32 @@
   <div class="app-container">
     <!-- 表格查询条件 -->
     <div class="filter-container">
+      <el-input
+        v-model.trim="listQuery.role_name"
+        placeholder="角色..."
+        style="width: 200px;"
+        class="filter-item"
+        clearable
+      />
       <div class="time-choose-box">
         <div class="time-choose">
+          <el-button type="primary" @click="search()">查询</el-button>
           <el-button type="primary" @click="add()">添加</el-button>
         </div>
       </div>
     </div>
     <!-- 表格区域 -->
     <el-table
-      v-loading="loading"
       :data="tableData"
       style="width: 100%"
     >
       <el-table-column
-        prop="menu_name"
-        label="菜单名称"
+        prop="role_name"
+        label="角色名称"
         align="center"
       />
       <el-table-column
-        prop="code"
-        label="菜单编码"
-        align="center"
-      />
-      <el-table-column
-        label="菜单状态"
+        label="角色状态"
         align="center"
       >
         <template slot-scope="scope">
@@ -40,13 +42,14 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="remark"
-        label="备注"
+        prop="update_time"
+        label="更新时间"
         align="center"
       />
       <el-table-column
         fixed="right"
         label="操作"
+        width="108"
       >
         <template slot-scope="scope">
           <el-button type="primary" icon="el-icon-edit" circle @click="edit(scope.row)" />
@@ -54,22 +57,31 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog title="添加" :visible.sync="dialogFormVisible">
+    <!-- 分页 -->
+    <el-pagination
+      :current-page.sync="listQuery.page"
+      layout="total, prev,pager, next"
+      :total="total"
+      background
+      @current-change="search"
+    />
+    <el-dialog :title="title" :visible.sync="dialogFormVisible">
       <el-form :model="form">
-        <el-form-item label="名称">
-          <el-input v-model="form.menu_name" autocomplete="off" />
+        <el-form-item label="角色名称">
+          <el-input v-model.trim="form.role_name" />
         </el-form-item>
-        <el-form-item label="编码">
-          <el-input v-model="form.code" autocomplete="off" />
-        </el-form-item>
-        <el-form-item label="菜单状态">
+        <el-form-item label="角色状态">
           <el-radio-group v-model="form.status">
             <el-radio :label="1">启用</el-radio>
             <el-radio :label="0">禁用</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="备注">
-          <el-input v-model="form.remark" autocomplete="off" />
+        <el-form-item label="角色权限">
+          <el-checkbox-group v-model="form.role_keys">
+            <el-checkbox v-for="(item, index) in menusList" :key="index" :label="item.code">
+              {{ item.menu_name }}
+            </el-checkbox>
+          </el-checkbox-group>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -81,46 +93,60 @@
 </template>
 
 <script>
-import { add, del, edit, list, status } from '@/api/menus'
+import { list, add, del, edit, menus, status } from '@/api/roles'
 
 export default {
   name: 'Administrator',
   data() {
     return {
+      listQuery: {
+        role_name: '',
+        page: 1,
+        limit: 10
+      },
+      title: '添加角色',
+      menusList: [],
       form: {
-        menu_name: '',
-        code: '',
-        remark: '',
-        status: 1
+        role_name: '',
+        status: 1,
+        role_keys: []
       },
       tableData: [],
-      dialogFormVisible: false,
-      loading: false
+      total: 0,
+      dialogFormVisible: false
     }
   },
   created() { // 页面加载的时候
+    this.getMenus()
     this.search()
   },
   methods: {
+    getMenus() { // 获取菜单列表
+      menus().then(res => {
+        this.menusList = res // 菜单列表
+      })
+    },
     search() { // 查询菜单列表
       this.loading = true // 触发加载动画
-      list().then(res => {
-        this.tableData = res // 菜单列表
+      list(this.listQuery).then(res => {
+        this.tableData = res.list // 角色列表
+        this.total = res.total // 角色列表总条数
         this.loading = false // 停止加载动画
       })
     },
-    add() { // 添加菜单
-      this.title = '添加菜单' // 设置弹窗标题
+    add() { // 添加角色
+      this.title = '添加角色' // 设置弹窗标题
       this.dialogFormVisible = true // 打开弹窗
       this.form = this.$options.data().form // 初始化form表单
     },
-    edit(currentUser) { // 编辑菜单
+    edit(currentUser) { // 编辑角色
       this.form = { ...currentUser } // 表单回显
-      this.title = '编辑菜单' // 设置弹窗标题
+      this.form.role_keys = this.form.role_keys.split(',')
+      this.title = '编辑角色' // 设置弹窗标题
       this.dialogFormVisible = true // 打开弹窗
     },
     ok() { // 提交表单
-      if (this.title === '编辑菜单') { // 编辑请求
+      if (this.title === '编辑角色') { // 编辑请求
         edit(this.form).then(() => {
           this.$message.success('编辑成功') // 请求结果提示
           this.dialogFormVisible = false // 关闭弹窗
@@ -134,7 +160,7 @@ export default {
         })
       }
     },
-    changeStatus(data) { // 编辑菜单状态
+    changeStatus(data) { // 编辑角色状态
       status({
         status: data.status,
         id: data.id
@@ -145,8 +171,8 @@ export default {
         this.search() // 刷新列表
       })
     },
-    del(data) { // 删除菜单
-      if (data.status) { // 菜单为启用状态禁止删除
+    del(data) { // 删除角色
+      if (data.status) { // 角色为启用状态禁止删除
         this.$message.error('删除前请先禁用它！')
         return
       }

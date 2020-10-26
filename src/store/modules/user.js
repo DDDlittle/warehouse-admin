@@ -36,23 +36,20 @@ const actions = {
   login({ commit }, userInfo) {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
-      // commit('SET_TOKEN', 'login-success')
-      // setToken('login-success')
-      // resolve('login-success')
-      login({ username: username.trim(), passwd:password }).then(response => {
-          commit('SET_TOKEN', response)
-          setToken(response)
-          resolve(response)
-       }).catch(error => {
+      login({ username: username.trim(), passwd: password }).then(response => {
+        commit('SET_TOKEN', response)
+        setToken(username)
+        resolve(response)
+      }).catch(error => {
         reject(error)
-       })
+      })
     })
   },
 
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-       const response = userInfo()
+      const response = userInfo()
       if (response) {
         dispathUserInfo(response, commit, reject, resolve)
       } else {
@@ -73,10 +70,8 @@ const actions = {
   logout({ commit, state, dispatch }) {
     return new Promise((resolve, reject) => {
       logout(state.token).then(() => {
-        removeToken()
         resetRouter()
         dispatch('tagsView/delAllViews', null, { root: true })
-        resolve()
       }).catch(error => {
         reject(error)
       })

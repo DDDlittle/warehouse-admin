@@ -39,6 +39,7 @@ class Request {
             type: 'error',
             duration: 5 * 1000
           })
+          return Promise.reject(res.msg)
         } else {
           return res
         }
@@ -57,7 +58,7 @@ class Request {
           'Content-Type': 'application/json;charset=utf-8' }
         })
         .then((res) => {
-          resolve(res.data)
+          resolve(res ? res.data : res)
         })
         .catch((error) => {
           reject(error)

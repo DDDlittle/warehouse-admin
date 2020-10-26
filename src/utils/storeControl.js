@@ -4,7 +4,7 @@ export function userInfo() {
   const store = JSON.parse(session)
   return store.user ? JSON.parse(store.user) : null
 }
-export function dispathUserInfo(response, commit, reject, resolve) {
+export async function dispathUserInfo(response, commit, reject, resolve) {
   if (!response || response.length <= 0) {
     reject('getInfo: roles must be a non-null array!')
   }

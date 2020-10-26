@@ -44,7 +44,15 @@ export const constantRoutes = [
         meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
       }
     ]
-  },
+  }
+]
+
+/**
+ * asyncRoutes
+ * the routes that need to be dynamically loaded based on user roles
+ */
+export const asyncRoutes = [
+  { path: '*', redirect: '/404', hidden: true },
   {
     path: '/config',
     component: Layout,
@@ -55,45 +63,45 @@ export const constantRoutes = [
         path: 'goods',
         component: () => import('@/views/goods/index'),
         name: 'Goods',
-        meta: { title: '商品管理' }
+        meta: { title: '商品管理', code: 'goods' }
       },
       {
         path: 'pro',
         component: () => import('@/views/pro/index'),
         name: 'Pro',
-        meta: { title: '供应商管理' }
+        meta: { title: '供应商管理', code: 'goods' }
       },
       {
         path: 'merchant',
         component: () => import('@/views/merchant/index'),
         name: 'Merchant',
-        meta: { title: '商家管理' }
+        meta: { title: '商家管理', code: 'merchant' }
       }
     ]
   },
   {
     path: '/admin',
     component: Layout,
-    redirect: '/user',
+    redirect: '/users',
     meta: { title: '管理员设置', icon: 'user' },
     children: [
       {
-        path: 'user',
+        path: 'users',
         component: () => import('@/views/user/index'),
         name: 'User',
-        meta: { title: '用户管理' }
+        meta: { title: '用户管理', code: 'users' }
       },
       {
-        path: 'character',
-        component: () => import('@/views/character/index'),
-        name: 'Character',
-        meta: { title: '角色管理' }
+        path: 'roles',
+        component: () => import('@/views/roles/index'),
+        name: 'Roles',
+        meta: { title: '角色管理', code: 'roles' }
       },
       {
-        path: 'merchant',
-        component: () => import('@/views/merchant/index'),
+        path: 'menus',
+        component: () => import('@/views/menus/index'),
         name: 'Merchant',
-        meta: { title: '菜单管理' }
+        meta: { title: '菜单管理', code: 'menus' }
       }
     ]
   },
@@ -107,24 +115,16 @@ export const constantRoutes = [
         path: 'out',
         component: () => import('@/views/out/index'),
         name: 'Out',
-        meta: { title: '出库' }
+        meta: { title: '出库', code: 'outbound' }
       },
       {
         path: 'in',
         component: () => import('@/views/in/index'),
         name: 'In',
-        meta: { title: '入库' }
+        meta: { title: '入库', code: 'inbound' }
       }
     ]
   }
-]
-
-/**
- * asyncRoutes
- * the routes that need to be dynamically loaded based on user roles
- */
-export const asyncRoutes = [
-  { path: '*', redirect: '/404', hidden: true }
 ]
 
 const createRouter = () => new Router({

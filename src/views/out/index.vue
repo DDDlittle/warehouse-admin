@@ -137,7 +137,7 @@ export default {
         username: ''
       },
       form: {},
-tableData: [{
+      tableData: [{
         item_name: '旺仔牛奶',
         provider: '旺旺食品',
         item_type: '乳制品',

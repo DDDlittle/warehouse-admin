@@ -62,35 +62,35 @@
             :data="tableData"
             border
             style="width: 100%"
-        >
-        <el-table-column
-        prop="item_name"
-        label="商品名称"
-        width="180"
-        align="center"
-        />
-        <el-table-column
-            prop="provider"
-            label="供应商"
-            width="180"
-            align="center"
-        />
-        <el-table-column
-            prop="count"
-            label="数量"
-            align="center"
-        />
-        <el-table-column
-            fixed="right"
-            label="操作"
-            width="108"
-        >
-            <template slot-scope="scope">
+          >
+            <el-table-column
+              prop="item_name"
+              label="商品名称"
+              width="180"
+              align="center"
+            />
+            <el-table-column
+              prop="provider"
+              label="供应商"
+              width="180"
+              align="center"
+            />
+            <el-table-column
+              prop="count"
+              label="数量"
+              align="center"
+            />
+            <el-table-column
+              fixed="right"
+              label="操作"
+              width="108"
+            >
+              <template slot-scope="scope">
                 <el-button type="primary" icon="el-icon-edit" circle @click="edit(scope.row)" />
                 <el-button type="danger" icon="el-icon-delete" circle @click="del(scope.row)" />
-            </template>
-        </el-table-column>
-        </el-table>
+              </template>
+            </el-table-column>
+          </el-table>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
