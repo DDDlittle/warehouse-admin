@@ -1,0 +1,43 @@
+.popover-member .cell{
+  overflow: visible;
+}
+.vip-container{
+  clear:both;
+}
+.vip-container .is-scrolling-none, .vip-container{
+  overflow: visible!important;
+}
+.allMember .el-form-item{
+  display: inline-block;
+  width:40%;
+  margin-left:40px;
+}
+.rebateMember .el-input{
+  width:70%;
+}
+.el-switch {
+  position: relative;
+}
+// .el-switch__label--right{
+//   position: absolute;
+//   top:0;
+//   left:50px;
+  
+// }
+// .el-switch__label--left{
+//   position: absolute;
+//   top:0;
+//   left:50px;
+  
+// }
+// .el-switch__core{
+//   width:80px!important;
+//   // height:30px!important;
+//   // border-radius:20px!important;
+// }
+// .el-switch__label.is-active{
+//   color:#fff;
+// }
+// .el-switch__label{
+//   font-size:12px;
+// }
